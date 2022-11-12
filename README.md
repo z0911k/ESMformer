@@ -36,7 +36,7 @@ python main.py --test --previous_dir './checkpoint/pretrained/supervised_model.p
 To test on a self supervised with Error-aware pretrained model on Human3.6M:
 
 ```bash
-python main.py --test --previous_dir './checkpoint/pretrained/self_supervised_with_Error_aware_model.pth'
+python main.py --self_supervised 1 --test --previous_dir './checkpoint/pretrained/self_supervised_with_Error_aware_model.pth'
 ```
 
 ## Train the Model
