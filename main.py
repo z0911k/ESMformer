@@ -148,15 +148,12 @@ if __name__ == '__main__':
     test_data = Fusion(opt=opt, train=False, dataset=dataset, root_path=root_path)
     test_dataloader = torch.utils.data.DataLoader(test_data, batch_size=opt.batch_size,
                                                   shuffle=False, num_workers=int(opt.workers), pin_memory=True)
-    model = Model(opt)
 
-    model = Model(opt).cuda()
     model = Model(opt)
     if torch.cuda.device_count() > 1:
         print("Let's use", torch.cuda.device_count(), "GPUs!")
         model = torch.nn.DataParallel(model, device_ids=CUDA_ID).to(device)
         model = model.to(device)
-        # model.load_state_dict(torch.load('./checkpoint/1030_1307_06_27/model_7_3639.pth'))
 
     model_dict = model.state_dict()
     if opt.previous_dir != '':
