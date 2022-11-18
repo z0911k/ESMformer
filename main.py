@@ -56,7 +56,7 @@ def step(split, opt, actions, dataLoader, model, optimizer=None, epoch=None, wri
 
             if opt.self_supervised:  ## self_supervised
                 if opt.tri_loss and not opt.reproj_loss:
-                    loss_batch = triangulate_loss(output_3D[:, 0], input_2D[:, opt.pad], subject)  # 用当前帧自监督计算三角化损失
+                    loss_batch = triangulate_loss(output_3D[:, 0], input_2D[:, opt.pad], subject)
                 elif not opt.tri_loss and opt.reproj_loss:
                     loss_batch = reprojection_loss(output_3D[:, 0], input_2D[:, opt.pad], subject)
                 else:
@@ -80,14 +80,13 @@ def step(split, opt, actions, dataLoader, model, optimizer=None, epoch=None, wri
                     mean, std_var = torch.mean(loss_batch), torch.sqrt(torch.var(loss_batch))
                     loss = torch.mean(loss_batch.to(device))
 
-                # 进度条设置\n",
                 TQDM.set_description(f'Epoch [{epoch}/{opt.nepoch}]')
                 TQDM.set_postfix({"l": loss.item(), "w": temp_weight_sum.item(),
                                   'u': mean.item(), 's': std_var.item()})
 
             else:
                 loss = mpjpe_cal(output_3D, out_target)
-                # 进度条设置\n",
+
                 TQDM.set_description(f'Epoch [{epoch}/{opt.nepoch}]')
                 TQDM.set_postfix({"l": loss.item()})
 
