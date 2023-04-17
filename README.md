@@ -4,7 +4,7 @@
 
 ## News :triangular_flag_on_post:
 
-[2023/04/18] The models code are released!
+[2023/04/18] The codes of our model are released!
 
 ## TODO :triangular_flag_on_post:
 
