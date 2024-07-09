@@ -110,7 +110,7 @@ class MVF(nn.Module):
         super().__init__()
         self.conv1 = nn.Sequential(
             nn.BatchNorm2d(4, momentum=0.1),
-            nn.Conv2d(4, 1, kernel_size=args.mvf_kernel, stride=1, padding=int((args.mvf_kernel - 1) / 2), bias=False),
+            nn.Conv2d(4, 1, kernel_size=args.mvf_kernel, stride=1, padding=int((args.mvf_kernel-1)/2), bias=False),
             nn.ReLU(inplace=True),
         )
         self.norm = nn.LayerNorm(args.channel)
@@ -122,20 +122,18 @@ class MVF(nn.Module):
         return x
 
 
+## TODO: Multi-view intra-level feature enhancer
 class MILF_Block(nn.Module):
-    def __init__(self, dim, num_heads, mlp_hidden_dim, act_layer=nn.GELU, norm_layer=nn.LayerNorm, depth='222',
-                 drop_rate=[0.1, 0.1, 0.1], length=27):
+    def __init__(self, dim, num_heads, mlp_hidden_dim, act_layer=nn.GELU, norm_layer=nn.LayerNorm, depth='222', drop_rate=[0.1,0.1,0.1], length=27):
         super().__init__()
 
-        self.trans1 = Transformer(depth=int(depth[0]), embed_dim=dim, mlp_hidden_dim=dim * 2, h=num_heads,
-                                  drop_rate=drop_rate[0],
+        self.trans1 = Transformer(depth=int(depth[0]), embed_dim=dim, mlp_hidden_dim=dim * 2, h=num_heads, drop_rate=drop_rate[0],
                                   length=length)
-        self.trans2 = Transformer(depth=int(depth[1]), embed_dim=dim, mlp_hidden_dim=dim * 2, h=num_heads,
-                                  drop_rate=drop_rate[1],
+        self.trans2 = Transformer(depth=int(depth[1]), embed_dim=dim, mlp_hidden_dim=dim * 2, h=num_heads, drop_rate=drop_rate[1],
                                   length=length)
-        self.trans3 = Transformer(depth=int(depth[2]), embed_dim=dim, mlp_hidden_dim=dim * 2, h=num_heads,
-                                  drop_rate=drop_rate[2],
+        self.trans3 = Transformer(depth=int(depth[2]), embed_dim=dim, mlp_hidden_dim=dim * 2, h=num_heads, drop_rate=drop_rate[2],
                                   length=length)
+
 
     def forward(self, x_1, x_2, x_3):
         x_1 = x_1 + self.trans1(x_1)
@@ -145,9 +143,8 @@ class MILF_Block(nn.Module):
         return x_1, x_2, x_3
 
 
-## TODO: Multi-view Intra-level Fusion(MILF)
 class MILF(nn.Module):
-    def __init__(self, depth=[2, 2, 2], embed_dim=512, drop_rate=0.1, length=27):
+    def __init__(self, depth=[2,2,2], embed_dim=512, drop_rate=0.1, length=27):
         super().__init__()
 
         norm_layer = partial(nn.LayerNorm, eps=1e-6)

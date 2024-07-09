@@ -15,7 +15,7 @@ class Model(nn.Module):
     def __init__(self, args):
         super().__init__()
 
-        ## Single-view Multi-level Feature Extraction
+        ## Single-view multi-level feature extractor
         self.ssfe1 = SMFE(args)
         self.ssfe2 = SMFE(args)
         self.ssfe3 = SMFE(args)
@@ -30,11 +30,11 @@ class Model(nn.Module):
         self.norm2 = nn.LayerNorm(args.channel)
         self.norm3 = nn.LayerNorm(args.channel)
 
-        ##  Multi-view Intra-level Fusion
-        self.milf = MILF(depth=args.milf, embed_dim=args.channel, length=args.frames)
+        ## Multi-view intra-level feature enhancer
+        self.mife = MILF(depth=args.milf, embed_dim=args.channel, length=args.frames)
 
-        ##Multi-view Cross-level Fusion
-        self.mclf = MCLF(args.mclf, args.channel, args.d_hid, length=args.frames)
+        ## Multi-view cross-level feature fuser(MCFF)
+        self.mcff = MCLF(args.mclf, args.channel, args.d_hid, length=args.frames)
 
         ## Regression
         self.regression = nn.Sequential(
@@ -66,10 +66,10 @@ class Model(nn.Module):
         x2 = self.norm2(self.mvf2(x2).squeeze(1) + x12 + x22 + x32 + x42)
         x3 = self.norm3(self.mvf3(x3).squeeze(1) + x13 + x23 + x33 + x43)
 
-        x1, x2, x3 = self.milf(x1, x2, x3)
+        x1, x2, x3 = self.mife(x1, x2, x3)
 
         ##  mcff
-        x = self.mclf(x1, x2, x3)
+        x = self.mcff(x1, x2, x3)
 
         ## Regression
         x = x.permute(0, 2, 1).contiguous()
@@ -81,8 +81,7 @@ class Model(nn.Module):
         x = rearrange(x, 'b (j c) f -> b f j c', j=J).contiguous()
         return x
 
-
-opt = opts().parse()
-model = Model(opt)
-x = torch.rand((16, 27, 4, 17, 2))
-print(model(x).shape)
+# opt = opts().parse()
+# model = Model(opt)
+# x = torch.rand((16, 27, 4, 17, 2))
+# print(model(x).shape)

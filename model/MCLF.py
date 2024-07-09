@@ -70,6 +70,7 @@ class MCLF_Block(nn.Module):
         self.norm3_32 = norm_layer(dim)
         self.norm3_33 = norm_layer(dim)
 
+
         self.attn_1 = Cross_Attention(dim, num_heads=num_heads, qkv_bias=qkv_bias, \
                                       qk_scale=qk_scale, attn_drop=attn_drop, proj_drop=drop)
         self.attn_2 = Cross_Attention(dim, num_heads=num_heads, qkv_bias=qkv_bias, \
@@ -89,8 +90,7 @@ class MCLF_Block(nn.Module):
 
         return x_1, x_2 ,x_3
 
-
-## TODO: Multi-view Cross-level Fusion (MCLF)
+## TODO: Multi-view cross-level feature fuser(MCFF)
 class MCLF(nn.Module):
     def __init__(self, depth=1, embed_dim=512, mlp_hidden_dim=1024, h=8, drop_rate=0.1, length=27):
         super().__init__()
