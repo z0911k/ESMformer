@@ -1,6 +1,6 @@
 # ESMformer: Error-aware Self-supervised Transformer for Multi-view 3D Human Pose Estimation
 
-<p align="center"><img src="figs/issue.png" width="100%" alt="" /></p>
+<p align="center"><img src="figs/issue.jpg" width="100%" alt="" /></p>
 
 ## News 🚩
 
